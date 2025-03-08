@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index des personnages{% endblock %}
+
+{% block body %}
+    {% for personnage in personnages %}
+        <article>
+            <header>{{ personnage.name }}</header>
+            <ul>
+                <li> Année de naissance : {{ personnage.birth_year }}</li>
+                <li> Taille : {{ personnage.height }}</li>
+                <li> Poids : {{ personnage.mass }}</li>
+                <li> Couleur de cheveux : {{ personnage.hair_color }}</li>
+                <li> Couleur de yeux : {{ personnage.eye_color }}</li>
+                <li> Couleur de peau : {{ personnage.skin_color }}</li>           
+            </ul>
+        </article>
+    {% endfor %}
+{% endblock %}

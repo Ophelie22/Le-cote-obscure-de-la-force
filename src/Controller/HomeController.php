@@ -2,38 +2,33 @@
 
 namespace App\Controller;
 
+use App\Service\StarWarsApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class HomeController extends AbstractController
+
+class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function index(HttpClientInterface $httpClient): Response
+    public function __construct(
+        private readonly StarWarsApiService $starWarsApiService)
     {
-        $personnages = $httpClient->request(
-            'GET',
-            'https://swapi.py4e.com/api/people/');
-            // dd($personnages)->toArray()['results'];
+    }
+    
+    #[Route('/', name: 'app_home')]
+    public function index(): Response
+    {
         return $this->render('home/index.html.twig', [
-            'personnages' => $personnages->toArray()['results'],
+            'personnages' => $this->starWarsApiService->getPersonnages(),
         ]);
     }
 
-
     //on va vouloir aller chercher un personnage
     #[Route('/personnage/{id}', name: 'app_personnage', requirements: ['id' => '\d+'])]
-    public function personnage(HttpClientInterface $httpClient, int $id): Response
+    public function personnage(int $id): Response
     {
-        //dd($id)
-        $personnage = $httpClient->request(
-            'GET',
-            'https://swapi.py4e.com/api/people/'.$id
-        );
-        
         return $this->render('home/personnage.html.twig', [
-            'personnage' => $personnage->toArray(),
+            'personnage' => $this->starWarsApiService->getPersonnage($id),
         ]);
     }
 
